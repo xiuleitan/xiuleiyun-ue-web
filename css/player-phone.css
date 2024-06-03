@@ -1,0 +1,961 @@
+/*Copyright Epic Games, Inc. All Rights Reserved.*/
+:root {
+	/*Using colour scheme https://color.adobe.com/TD-Colors---Option-3-color-theme-10394433/*/
+	--colour1:#000000;
+	--colour2:#FFFFFF;
+	--colour3: #5fc83e;
+	--colour4:#35b350;
+	--colour5:#ffab00;
+	--colour6:#1e1d22;
+	--colour7: #8e3939;
+}
+html {
+	/*width: 100vw;*/
+	/*height: 100vh;*/
+	/*position: relative;*/
+}
+
+body{
+    margin: 0;
+	padding: 0;
+    background-color: #c04f4f;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	box-sizing: border-box;
+	position: relative;
+	/*position: absolute;*/
+	/*top: 0;*/
+    /*left: 0;*/
+    width: 100vw;
+    height: 100vh;
+    /*-webkit-transform: rotate(90deg);*/
+    /*-moz-transform: rotate(90deg);*/
+    /*-ms-transform: rotate(90deg);*/
+    /*transform: rotate(90deg);*/
+    /*transform-origin: 0% 0%;*/
+}	
+
+/* video相关的 */
+#playerUI {
+	width: 100vh;
+	height: 100vw;
+	transition: all .2s;
+	background-color: #35b350;
+	position: relative;
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: translateX(100vw) rotate(90deg);
+	transform-origin: 0% 0%;
+
+}
+canvas {
+	image-rendering: crisp-edges;
+	position: absolute;
+}
+video {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	/*object-fit: contain;*/
+	/*-webkit-transform: rotate(90deg);*/
+	/*-moz-transform: rotate(90deg);*/
+	/*-ms-transform: rotate(90deg);*/
+	/*transform: rotate(90deg);*/
+	/*transform-origin: 0% 0%;*/
+}
+#player{
+	/*display: none;*/
+	/*width: 100vh;*/
+	/*height: 100vw;*/
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	/*top: 0;*/
+	/*left: 0;*/
+	background-color: #050505;
+}
+#videoPlayOverlay{
+	position: absolute;
+	font-size: 1.8em;
+	width: 100%;
+	height: 100%;
+	color: var(--colour2);
+	background: transparent;
+	/*z-index: 2;*/
+}
+img#playButtonMy{
+	max-width: 20%;
+	width: 20%;
+}
+#clickPlayButtonOverlay{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	color: #f1f1f1;
+	text-align: center;
+	line-height: 150vw;
+	font-size: 6vw;
+	background-color: rgba(26, 26, 26, 0.5);
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	cursor: pointer;
+	/*z-index: 1;*/
+}
+
+#streamingVideo {
+	pointer-events: all;
+
+}
+#playButton{
+	display: inline-block;
+	height: auto;
+	z-index: 30;
+}
+
+img#playButton{
+	max-width: 20%;
+	width: 20%;
+}
+
+#freezeFrameOverlay {
+	background-color: transparent;
+}
+
+.freezeframeBackground {
+	background-color: #000 !important;
+}
+
+#overlay {
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+	position: absolute;
+	color: var(--colour2);
+	pointer-events: none;
+	overflow: hidden;
+}
+
+#overlay .settingBtn {
+	background-color: rgba(100, 100, 100, 0.62);
+	border: 1px solid rgba(5, 5, 5, 0.32);
+	color: var(--colour2);
+	position: relative;
+	width: 2rem;
+	height: 2rem;
+	padding: 0.5rem;
+	text-align: center;
+	border-radius: 15%;
+}
+
+#fullscreen-btn {
+	padding: 0.6rem !important;
+}
+
+#overlay .settingBtn:hover {
+	background-color: rgba(100, 100, 100, 0.62);
+	/*border: 3px solid rgba(36, 118, 62, 0.62);*/
+	border: none;
+	transition: all 0.1s;
+	padding-left: 0.55rem;
+	padding-top: 0.55rem;
+}
+
+#overlay .settingBtn:active {
+	/*border: 1px solid #286d2e;*/
+	background-color: #585555;
+	padding-left: 0.55rem;
+	padding-top: 0.55rem;
+}
+.settingBtn .tooltiptext {
+	display: none;
+}
+
+/*#overlay img {*/
+/*	width: 100%;*/
+/*	height: 100%;*/
+/*}*/
+
+
+/* State for element to be clickable */
+.clickableState{
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	cursor: pointer;
+}
+
+/* State for element to show text, this is for informational use*/
+.textDisplayState{
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	cursor: pointer;
+}
+
+/* State to hide overlay, WebRTC communication is in progress and or is playing */
+.hiddenState{
+	display: none;
+}
+
+/* 进度条相关的 */
+.loading-overlay {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(253, 15, 15);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	position: relative;
+}
+.loading-overlay img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.progress-box {
+	position: absolute;
+	bottom: 6%;
+	left: 0;
+	width: 100%;
+	height: 2.5rem;
+	border-radius: 1px;
+	background-color: rgba(229, 225, 225, 0.8);
+	/*box-shadow: 0 0 2px 2px rgb(122, 122, 125) inset;*/
+	/*//overflow: hidden;*/
+	/*	padding: 1px;*/
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+.progress {
+	height: 100%;
+	width: 100px;
+	background-color: #3b9b3b;
+	border-radius: 1px;
+	text-align: right;
+	transition: all 0.3s;
+	/*margin: 0 2px;*/
+}
+
+/* tooltip相关的 */
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 2.3rem;
+	color: var(--colour2);
+	text-align: center;
+	border-radius: 10px;
+	padding: 0px 10px;
+
+	/*font-family: 'Montserrat', sans-serif;*/
+	font-size: .7rem;
+	/*letter-spacing: 0.75px;*/
+	/* Position the tooltip */
+	position: absolute;
+	top: 0;
+	transform: translateY(25%);
+	right: 125%;
+	z-index: 20;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+	/*background-color: var(--colour7);*/
+	background-color: #1a6f2c;
+}
+
+#connection .tooltiptext {
+	display: none;
+	top: 25%;
+	transform: translateX(-40%);
+	right: 38%;
+	z-index: 20;
+	padding: 5px 5px;
+	width: max-content;
+}
+
+#settings-panel .tooltiptext {
+	display: block;
+	top: 125%;
+	transform: translateX(-50%);
+	left: 0;
+	z-index: 20;
+	padding: 5px 5px;
+	border: 3px solid var(--colour5);
+	width: max-content;
+}
+
+#controls {
+	position: absolute;
+	top: 2%;
+	right: 46%;
+	font-family: 'Michroma', sans-serif;
+	pointer-events: all;
+	display: block;
+}
+
+#controls > * {
+	/*margin-bottom: 0.5rem;*/
+	/*border-radius: 50%;*/
+	display: block;
+	/*height: 2rem;*/
+	line-height: 1rem;
+	/*padding: 0.5rem;*/
+}
+
+#controls #additionalinfo {
+	text-align: center;
+	font-family: 'Montserrat', sans-serif;
+}
+
+#unrealengine {
+	position: absolute;
+	bottom: 5%;
+	right: 10%;
+	font-family: 'Michroma', sans-serif;
+	pointer-events: all;
+	width: min-content;
+}
+
+#unrealengine p {
+	visibility: hidden;
+	width: 15rem;
+}
+
+#connection {
+	position: absolute;
+	top: 3%;
+	right: 52%;
+	/*font-family: 'Michroma', sans-serif;*/
+	height: 1.6rem;
+	width: 1.6rem;
+	pointer-events: all;
+	transition: all  .1s;
+}
+
+.noselect {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Old versions of Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+									supported by Chrome, Edge, Opera and Firefox */
+}
+
+/*已修改*/
+.panel-wrap {
+	position: absolute;
+	top: 0;
+	/*bottom: 0;*/
+	left: 50%;
+	/*height: 100%;*/
+	width: 75vh;
+	transform: translateY(-100%) translateX(-50%);
+	transition: .3s ease-out;
+	pointer-events: all;
+	/*backdrop-filter: blur(10px);*/
+	-webkit-backdrop-filter: blur(10px);
+	overflow-y: auto; /* 允许垂直滚动 */
+	overflow-x: hidden;
+	background-color: transparent;
+	box-shadow: 0 0 2px 1px #254a13;
+	/*display: flex;*/
+	/*flex-direction: column;*/
+	/*justify-content: flex-start;*/
+	/*align-items: center;*/
+	/*align-content: flex-start;*/
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+
+}
+.panel-wrap::-webkit-scrollbar {
+	width: 0; /* 隐藏滚动条 */
+	background: transparent; /* 可选: 使背景透明 */
+}
+
+/*已修改*/
+.panel-wrap-visible {
+	transform: translateY(0%) translateX(-50%);
+}
+
+
+/*已修改*/
+.panel {
+	color: #f1f1f1;
+	overflow-y: auto; /* 允许垂直滚动 */
+	padding: .2em .4em;
+	/*width: 80vw;*/
+	/*height: 100%;*/
+	margin: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding-bottom: 3rem;
+	overflow-x: hidden;
+}
+
+
+.dongao-box {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 15vw;
+}
+.dongao {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.txl-box-1 {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: rgba(40, 38, 38, 0.7);
+	/*padding: .5em 2em;*/
+}
+.txl-box-1 .txl-box-left {
+	flex: 45%;
+}
+.txl-box-1 .txl-box-right {
+	flex: 30%;
+	margin-bottom: .1rem;
+	padding-right: 1rem;
+	padding-top: .2rem;
+}
+.txl-box-1 .txl-box-right-latency {
+	flex: 25%;
+	margin-bottom: .5rem;
+	padding-right: 1rem;
+}
+
+#heading {
+	display: inline-block;
+	font-size: 2em;
+	margin-block-start: 0.67em;
+	margin-block-end: 0.67em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	position: relative;
+	padding: 0 0 0 2rem;
+}
+
+#close {
+	margin-top: 0.5rem;
+	margin-bottom: 0.2rem;
+	margin-right: 0.5rem;
+	/*margin-right: 2rem;*/
+	/*padding: .5rem;*/
+	/*padding-top: 0.5rem;*/
+	/*padding-bottom: 0.5rem;*/
+	/*padding-right: 0.5rem;*/
+	/*font-size: 3em;*/
+	/*float: right;*/
+	width: 1.8em;
+	height: 1.5em;
+	transition: all 0.1s;
+	background: url("../images/close.png") no-repeat;
+	background-size: 100%;
+}
+
+/*#close:after {*/
+/*	padding-left: 0.5rem;*/
+/*	display: inline-block;*/
+/*	content: "\00d7"; !* This will render the 'X' *!*/
+/*}*/
+
+#close:hover {
+	color: rgb(112, 236, 82);
+	/*width: 2.2em;*/
+	/*height: 2.2em;*/
+	cursor: pointer;
+}
+
+#content {
+	margin-top: 0;
+	margin-bottom: 3rem;
+	margin-left: .2rem;
+	margin-right: .2rem;
+}
+
+/*已修改*/
+.setting {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: .2rem .2rem;
+	margin: 0.2rem 0;
+	/*box-shadow: 0 0 2px 1px #949191;*/
+	border-radius: 7px;
+	background-color: rgb(35, 35, 35);
+	padding-left: .4rem;
+	padding-right: .4rem;
+	padding-top: .2rem;
+	padding-bottom: .2rem;
+}
+
+
+#selectRenderResolution {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+#selectRenderResolution .settings-text {
+	width: 6rem;
+	padding-right: .2rem;
+}
+.setting .form-control-box {
+	border: 2px solid #33dc41;
+	padding: .3rem 0;
+	padding-left: .5rem;
+	padding-right: 1.4rem;
+	font-size: .7rem;
+	line-height: .7rem;
+	width: 10.5rem;
+	height: .6rem;
+	border-radius: .5rem;
+	margin-left: .2rem;
+}
+.setting .form-control-box::after {
+	position: absolute;
+	bottom: 22%;
+	right: 8%;
+	content: '';
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid #33dc41;
+	border-bottom: 2px solid #33dc41;
+	transform: rotate(45deg);
+}
+.setting .form-control-box:hover {
+	cursor: pointer;
+}
+.setting .form-control {
+	position: absolute;
+	display: none;
+	/*display: flex;*/
+	/*flex-direction: column;*/
+	/*justify-content: space-between;*/
+	/*align-items: flex-start;*/
+	top: 65%;
+	left: 1rem;
+	/*border: 2px solid #33dc41;*/
+	box-shadow: 0 0 .2rem .2rem #373636;
+	border-radius: .4rem;
+	background-color: #47454c;
+	padding-left: 0;
+	transition: all .2s;
+	overflow: hidden;
+	z-index: 101;
+}
+.setting .form-control li {
+	list-style: none;
+	width: 10.5rem;
+	height: 1.3rem;
+	background-color: #2e2d2d;
+	font-size: .7rem;
+	line-height: 1rem;
+	text-align: left;
+	padding-left: .1rem;
+}
+.setting .form-control li:hover {
+	background-color: #505150;
+	cursor: pointer;
+}
+
+/*已修改*/
+.settings-text{
+	margin-right: .1rem;
+	font-size: .8rem;
+	display: flex;
+	line-height: 1.4rem;
+}
+
+.txl-box-close {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: rgba(30, 29, 34, 0.5);
+}
+
+/*txl-box-close .lab-content{*/
+/*	display: flex;*/
+/*	flex-direction: row;*/
+/*	justify-content: space-between;*/
+/*}*/
+.txl-box-close .lab-favicon-box{
+	margin-left: 1rem;
+	margin-top: .3rem;
+	margin-bottom: .2rem;
+	width: 3rem;
+	height: 1.5rem;
+}
+.txl-box-close .lab-favicon-box img{
+	width: 100%;
+	height: 100%;
+}
+.txl-box-close .lab-name-box{
+	width: 20rem;
+	height: 1rem;
+	margin-top: .5rem;
+	margin-bottom: .2rem;
+	margin-right: 1rem;
+}
+.txl-box-close .lab-name-box img{
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+/*我的隐藏设置按钮*/
+.txl-box-close .dispalysetting {
+	width: 37rem;
+}
+.txl-box-close .dispalySettingButton {
+	margin-left: .4rem;
+	margin-top: .2rem;
+	width: 8rem;
+	height: 2rem;
+	background-color: #383838;
+	border: 1px solid #818281;
+	border-radius: .4rem;
+	font-size: .8rem;
+	color: #f1f1f1;
+}
+.txl-box-close .dispalySettingButton:hover {
+	/*background-color: #095b0e;*/
+	cursor: pointer;
+	/*font-size: 1.3rem;*/
+	border: 1px solid #33dc41;
+}
+.txl-box-close .dispalysetting span {
+	font-size: .6rem;
+	padding-left: .7rem;
+}
+
+/*** Toggle Switch styles ***/
+.tgl-switch {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.tgl-switch .tgl {
+	display:none;
+}
+
+.tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl + .tgl-slider {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl + .tgl-slider::-moz-selection {
+	background: none;
+}
+.tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl + .tgl-slider::selection {
+	background: none;
+}
+
+.tgl + .tgl-slider {
+	outline: 0;
+	display: block;
+	width: 3rem;
+	/*按钮的高度*/
+	height: 1.3rem;
+	position: relative;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.tgl + .tgl-slider:after, .tgl + .tgl-slider:before {
+	position: relative;
+	display: block;
+	content: "";
+	width: 50%;
+	height: 100%;
+}
+.tgl + .tgl-slider:after {
+	left: 0;
+}
+.tgl + .tgl-slider:before {
+	display: none;
+}
+
+.tgl-flat + .tgl-slider {
+	padding: 2px;
+	-webkit-transition: all .2s ease;
+	transition: all .2s ease;
+	background: var(--colour6);
+	border: 3px solid var(--colour7);
+	border-radius: 2em;
+}
+
+.tgl-flat + .tgl-slider:after {
+	-webkit-transition: all .2s ease;
+	transition: all .2s ease;
+	background: var(--colour7);
+	content: "";
+	border-radius: 1em;
+}
+
+.tgl-flat:checked + .tgl-slider {
+	border: 3px solid #33dc41;
+}
+
+.tgl-flat:checked + .tgl-slider:after {
+	left: 50%;
+	background: #33dc41;
+}
+
+.subtitle-text {
+	margin: 0 0 0 1rem;
+	color: var(--colour5);
+	position: relative;
+}
+
+.form-group {
+	padding-top: 4px;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	row-gap: 4px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.form-group label {
+	color: var(--colour2);
+	vertical-align: middle;
+	font-weight: normal;
+}
+
+#latencyTest .setting{
+	margin-right: 0rem;
+	background: transparent;
+}
+#latencyTest .settings-text {
+	line-height: 2rem;
+	display: none;
+}
+#latencyTest .setting .overlay-button{
+	border-radius: .6rem;
+	height: 1.6rem;
+	border: 1px solid #d5d3d3;
+	width: 7rem;
+	transition: all .1s;
+	font-size: .8rem;
+}
+#latencyTest .setting .overlay-button:hover {
+	border: 1px solid #33dc41;
+	background-color: #1e1d22;
+	cursor: pointer;
+}
+
+#stats {
+	margin-left: .5rem;
+	font-size: .6rem;
+
+}
+
+#LatencyStats {
+	margin-left: .8rem;
+	font-size: .6rem;
+}
+
+#hiddenInput {
+	position: absolute;
+	left: -10%;   /* Although invisible, push off-screen to prevent user interaction. */
+	width: 0px;
+	opacity: 0;
+}
+
+#editTextButton {
+	position: absolute;
+	height: 40px;
+	width: 40px;
+}
+
+.form-group label {
+	margin-right: 2rem;
+	min-width: 75%;
+}
+
+input {
+	text-align: right;
+}
+
+.warning {
+	box-sizing: border-box;
+	position: relative;
+	transform: scale(var(--ggs,1));
+	width: 20px;
+	height: 20px;
+	border: 2px solid;
+	border-radius: 40px;
+	display: none;
+}
+.warning::after,
+.warning::before {
+	content: "";
+	display: block;
+	box-sizing: border-box;
+	position: absolute;
+	border-radius: 3px;
+	width: 2px;
+	background: currentColor;
+	left: 7px
+}
+.warning::after {
+	top: 2px;
+	height: 8px
+}
+.warning::before {
+	height: 2px;
+	bottom: 2px
+}
+
+/* Flat buttons */
+input[type="button"] {
+	background-color: transparent;
+	color: var(--colour2);
+	font-family: 'Montserrat';
+	border: 3px solid #33dc41;
+	border-radius: .2rem;
+	font-size: 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	/*padding-top: .5rem;*/
+	/*padding-bottom: .5rem;*/
+}
+
+input[type="button"]:hover {
+	background-color: #33dc41;
+	transition: ease 0.3s;
+}
+input[type="button"]:active {
+	background-color: transparent;
+}
+
+/*重启视频流*/
+.setting .restartStream {
+	background-color: #33dc41;
+	border: 1px solid rgba(190, 190, 190, 0.62);
+	border-radius: 50%;
+	width: 2rem;
+	height: 2rem;
+	background: url("../images/refresh2.png") no-repeat;
+	background-size: 100%;
+	transition: all .1s;
+	transition: transform .4s;
+	transform: rotate(0deg);
+	/*animation: myRotate 1.2s ease-in-out .8s infinite;*/
+}
+@keyframes myRotate {
+	from {
+
+		transform: rotate(0deg);
+		opacity: 1;
+	}
+	to {
+		transform: rotate(360deg);
+		opacity: 1;
+	}
+}
+.setting .restartStream:hover {
+	background-color: #181c19;
+	border: 2px solid #33dc41;
+	/*width: 2.6rem;*/
+	/*height: 2.6rem;*/
+	cursor: pointer;
+}
+#connectionSettings .settings-text {
+	line-height: 1.5rem;
+	padding-top: .3rem;
+}
+
+#encoder-params-submit,
+#webrtc-params-submit {
+	text-align: center;
+}
+
+select,
+input[type="number"] {
+	background-color: var(--colour7);
+	color: var(--colour2);
+	border: 1px solid var(--colour6);
+	padding: 0.25rem;
+	font-family: 'Montserrat';
+	border-radius: 0.25rem;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+	margin-left: 0.5rem;
+}
+
+input[type="number"]:disabled {
+	padding-right: 0.5rem;
+	-moz-appearance: textfield;
+}
+
+input[type=number]:disabled::-webkit-inner-spin-button {
+	display: none;
+
+}
+
+#settingsBtn,
+#statsBtn {
+	cursor: pointer;
+}
+
+#streamingVideo {
+	pointer-events: all;
+}
+
+embed {
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+
+g {
+	fill: var(--colour2);
+}
+
+object {
+	pointer-events: none;
+}
+
+#connectionStrength {
+	fill: var(--colour7);
+}
+
+#minimize {
+	display: none;
+}
+
+#afkOverlay {
+	z-index: 999;
+	background-color: rgba(30, 29, 34, 0.6);
+	/*background-color: rgba(76, 253, 111, 0.6);*/
+	display: inline-block;
+	height: 100vh;
+	width: 100vw;
+	line-height: 100vh;
+	text-align: center;
+	overflow: hidden;
+	/*color: #8e3939;*/
+}
+
+#afkOverlay center {
+	display: inline-block;
+	line-height: 1.5;
+	height: 100vh;
+}
+
+.txl-displayNone {
+	display: none ;
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态显示下拉框</title>
+    <style>
+        .form-control-box {
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 200px; /* 根据需要调整宽度 */
+            cursor: pointer;
+        }
+
+        .form-control {
+            display: none;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 200px; /* 根据需要调整宽度 */
+            border: 1px solid #ccc;
+            position: absolute; /* 使其在 .form-control-box 下方显示 */
+            z-index: 1000; /* 确保下拉框在最上层 */
+            background-color: white; /* 设置背景色 */
+        }
+
+        .form-control li {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .form-control li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div class="form-control-box">1280x720 (HD)</div>
+<ul id="resolution-select-box" class="form-control">
+    <li data-value="3840x2160">3840x2160(视口分辨率)</li>
+    <li data-value="3840x2160">3840x2160(视口分辨率/2)</li>
+    <li data-value="3840x2160">3840x2160(视口分辨率/3)</li>
+    <li data-value="3840x2160">3840x2160(视口分辨率/4)</li>
+    <li data-value="1280x720">1280x720 (HD)</li>
+    <li data-value="1920x1080">1920x1080 (FHD)</li>
+    <li data-value="3840x2160">3840x2160 (4K UHD)</li>
+</ul>
+
+<script>
+    const formControlBox = document.querySelector('.form-control-box');
+    const resolutionSelectBox = document.getElementById('resolution-select-box');
+
+    // 显示或隐藏下拉框
+    formControlBox.addEventListener('click', () => {
+        const isDisplayed = resolutionSelectBox.style.display === 'block';
+        resolutionSelectBox.style.display = isDisplayed ? 'none' : 'block';
+    });
+
+    // 点击li元素时的处理
+    resolutionSelectBox.addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+            const selectedValue = event.target.getAttribute('data-value');
+            formControlBox.innerText = event.target.innerText;
+            resolutionSelectBox.style.display = 'none'; // 选择后隐藏下拉框
+
+            // 模拟处理逻辑
+            playClickAudio();
+            const [width, height] = selectedValue.split('x').map((value) => parseInt(value));
+            updateVideoStreamSize(width, height);
+            console.log(`Selected resolution: ${selectedValue}`);
+
+            // 将撑满屏幕复选框设置为未选中
+            let checkBox = document.getElementById('enlarge-display-to-fill-window-tgl');
+            if (checkBox !== null) {
+                checkBox.checked = false; // 设置为未选中
+            }
+        }
+    });
+
+    function playClickAudio() {
+        // 模拟播放点击音效
+        console.log("Click sound played");
+    }
+
+    function updateVideoStreamSize(width, height) {
+        // 模拟更新视频流尺寸
+        console.log(`Video stream size updated to: ${width}x${height}`);
+    }
+
+    // 点击页面其他地方时隐藏下拉框
+    document.addEventListener('click', (event) => {
+        if (!formControlBox.contains(event.target) && !resolutionSelectBox.contains(event.target)) {
+            resolutionSelectBox.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

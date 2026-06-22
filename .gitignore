@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build and cache output
+dist/
+build/
+coverage/
+.cache/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+.DS_Store
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Editor and IDE state
+.idea/
+.vscode/

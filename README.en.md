@@ -10,6 +10,12 @@ xiuleiyun-ue-web is a static web player UI for browser-based UE Pixel Streaming 
 
 The project is currently a plain static frontend with no build tooling or package manager requirement. It can be served by any static file server.
 
+## Interface Preview
+
+![xiuleiyun UE Web player interface preview](images/readme-interface-preview.jpg)
+
+The preview shows the center node, render nodes, and browser operation screen together. The player UI supports connection status, fullscreen mode, fill-screen mode, stream resolution selection, reconnect actions, and session information inspection.
+
 ## Features
 
 - WebRTC player page: `player.html` loads the player UI and WebRTC control logic.
